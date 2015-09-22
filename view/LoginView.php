@@ -23,9 +23,19 @@ class LoginView {
 	 */
 	public function response() {
 		$message = '';
+                if (filter_input(INPUT_POST, self::$login)) {
+                    if (filter_input(INPUT_POST, self::$name) == '')
+                        $message = 'Username is missing';
+                    else if (filter_input(INPUT_POST, self::$password) == '')    
+                        $message = 'Password is missing';
+                    else if ((filter_input(INPUT_POST, self::$name) == "Admin") &&
+                            (filter_input(INPUT_POST, self::$name) == "Admin"))
+                        $message = 'Welcome';
+                }
+                else {
+                    $message = '';
 		
-                if (filter_input(INPUT_POST, self::$login))
-                    $message = 'Welcome';
+                }
 		$response = $this->generateLoginFormHTML($message);
 		//$response .= $this->generateLogoutButtonHTML($message);
 		return $response;
@@ -58,7 +68,7 @@ class LoginView {
 					<p id="' . self::$messageId . '">' . $message . '</p>
 					
 					<label for="' . self::$name . '">Username :</label>
-					<input type="text" id="' . self::$name . '" name="' . self::$name . '" value="" />
+					<input type="text" id="' . self::$name . '" name="' . self::$name . '" value="' . filter_input(INPUT_POST, self::$name) . '" />
 
 					<label for="' . self::$password . '">Password :</label>
 					<input type="password" id="' . self::$password . '" name="' . self::$password . '" />
