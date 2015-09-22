@@ -9,7 +9,8 @@ class LoginView {
 	private static $cookiePassword = 'LoginView::CookiePassword';
 	private static $keep = 'LoginView::KeepMeLoggedIn';
 	private static $messageId = 'LoginView::Message';
-
+        private $message = '';
+        
 	public function __construct() {
 
 	}
@@ -21,23 +22,14 @@ class LoginView {
 	 *
 	 * @return  void BUT writes to standard output and cookies!
 	 */
-	public function response() {
-		$message = '';
-                if (filter_input(INPUT_POST, self::$login)) {
-                    if (filter_input(INPUT_POST, self::$name) == '')
-                        $message = 'Username is missing';
-                    else if (filter_input(INPUT_POST, self::$password) == '')    
-                        $message = 'Password is missing';
-                    else if ((filter_input(INPUT_POST, self::$name) == "Admin") &&
-                            (filter_input(INPUT_POST, self::$name) == "Admin"))
-                        $message = 'Welcome';
+	public function response($isLoggedIn) {
+
+                if ($isLoggedIn){
+                    $response = $this->generateLoginFormHTML($this->message);
                 }
                 else {
-                    $message = '';
-		
+                    $response = $this->generateLogoutButtonHTML($this->message);
                 }
-		$response = $this->generateLoginFormHTML($message);
-		//$response .= $this->generateLogoutButtonHTML($message);
 		return $response;
 	}
 
@@ -85,8 +77,36 @@ class LoginView {
         
             
 	//CREATE GET-FUNCTIONS TO FETCH REQUEST VARIABLES
-	private function getRequestUserName() {
-		//RETURN REQUEST VARIABLE: USERNAME
+	public function getRequestLogin() {
+            return filter_input(INPUT_POST, self::$login);
 	}
+	public function getRequestUserName() {
+            return filter_input(INPUT_POST, self::$name);
+	}
+	public function getRequestPassword() {
+            return filter_input(INPUT_POST, self::$password);
+	}
+        public function assignMessage($id){
+            switch ($id){
+                case 0:
+                    $this->message = "";
+                    break;
+                case 1:
+                    $this->message = "Username is missing";
+                    break;
+                case 2:
+                    $this->message = "Password is missing";
+                    break;
+                case 3:
+                    $this->message = "Wrong name or password";
+                    break;
+                case 4:
+                    $this->message = "Welcome";
+                    break;
+                
+            }
+            
+        }
+                
 	
 }

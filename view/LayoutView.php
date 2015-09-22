@@ -12,10 +12,11 @@ class LayoutView {
         </head>
         <body>
           <h1>Assignment 2</h1>
+          
           ' . $this->renderIsLoggedIn($isLoggedIn) . '
           
           <div class="container">
-              ' . $v->response() . '
+              ' . $v->response($isLoggedIn) . '
               
               ' . $dtv->show() . '
           </div>
