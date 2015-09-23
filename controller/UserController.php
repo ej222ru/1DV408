@@ -28,6 +28,7 @@ class UserController {
         if (!$this->loginView->getSessionUserLoggedIn()){
             // Only manage logins if not already logged in
             if ($this->loginView->getRequestLogin()){
+     //       if (!$this->loginView->getRequestLogout()){
 
                  if ($this->loginView->getRequestUserName() == ''){
                      $this->loginView->assignMessage(1);

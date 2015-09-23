@@ -105,7 +105,11 @@ class LoginView {
                
 	//CREATE GET-FUNCTIONS TO FETCH REQUEST VARIABLES
 	public function getRequestLogin() {
-            return filter_input(INPUT_POST, self::$login);
+            return filter_input(INPUT_POST, self::$login) 
+                    ||
+                   (filter_input(INPUT_POST, self::$name)    &&
+                    filter_input(INPUT_POST, self::$password) &&
+                    !filter_input(INPUT_POST, self::$logout)); 
  	}
 	public function getRequestLogout() {
             return filter_input(INPUT_POST, self::$logout);
