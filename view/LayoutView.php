@@ -3,6 +3,13 @@
 
 class LayoutView {
   
+    
+  /* 
+   * render() the complete form, whether it is a login form or logout button form
+   * is decided by the parameter @isLoggedIn which in turn is passed to response()
+   * which creates the details in the form in HTML  
+   * 
+   */
   public function render($isLoggedIn, LoginView $v, DateTimeView $dtv) {
     echo '<!DOCTYPE html>
       <html>

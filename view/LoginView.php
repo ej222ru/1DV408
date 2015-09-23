@@ -1,5 +1,6 @@
 <?php
 
+
 class LoginView {
 	private static $login = 'LoginView::Login';
 	private static $logout = 'LoginView::Logout';
@@ -9,18 +10,16 @@ class LoginView {
 	private static $cookiePassword = 'LoginView::CookiePassword';
 	private static $keep = 'LoginView::KeepMeLoggedIn';
 	private static $messageId = 'LoginView::Message';
+        
+        // session variable
 	private static $userLoggedIn = 'LoginView::UserLoggedIn';
 
         private $message = '';
         
-	public function __construct() {
-
-	}
-
 	/**
 	 * Create HTTP response
 	 *
-	 * Should be called after a login attempt has been determined
+	 * Called from 
 	 *
 	 * @return  void BUT writes to standard output and cookies!
 	 */
@@ -75,34 +74,19 @@ class LoginView {
 			</form>
 		';
 	}
-	
-        
-	public function setSessionClientId() {
-            $ip = filter_input(INPUT_SERVER,'HTTP_CLIENT_IP');
-            $browser = "";
-            if (isset($_REQUEST['self::$Browser'])){
-                $browser = $_REQUEST['self::$Browser'];
-            }
-            
-            $_SESSION["clientIP"] =  $ip;
-            $_SESSION["clientBrowser"] =  $browser;
- 
-        }
 
-	public function getSessionUser() {
-            return isset($_SESSION["userSessionId"]);
-       }
         
-	public function setSessionUser() {
-            $_SESSION["userSessionId"] =  session_id();
-       }
-	public function setSessionUserLoggedIn($value) {
-      //      echo "setSessionUserLoggedIn";
-            $_SESSION[self::$userLoggedIn] =  $value;
-            if ($value == "false"){
+        /*
+         * Parameter $loggedInStatus can have the values "true" or "false"
+         * i.e. userIsLoggedIn or not
+         */
+	public function setSessionUserLoggedIn($loggedInStatus) {
+            $_SESSION[self::$userLoggedIn] =  $loggedInStatus;
+            if ($loggedInStatus == "false"){
                 session_destroy();
             }
-       }
+        }
+       
 	public function getSessionUserLoggedIn() {
             if (isset($_SESSION[self::$userLoggedIn])){
                 if ($_SESSION[self::$userLoggedIn] == "true"){
@@ -118,8 +102,7 @@ class LoginView {
             }
        }
         
-       
-        
+               
 	//CREATE GET-FUNCTIONS TO FETCH REQUEST VARIABLES
 	public function getRequestLogin() {
             return filter_input(INPUT_POST, self::$login);
@@ -133,6 +116,9 @@ class LoginView {
 	public function getRequestPassword() {
             return filter_input(INPUT_POST, self::$password);
 	}
+        
+        // Set various message texts. 
+        // Called from the UserController
         public function assignMessage($id){
             switch ($id){
                 case 0:
