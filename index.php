@@ -8,9 +8,17 @@ require_once('controller/UserController.php');
 require_once('model/User.php');
 
 
+        
 //MAKE SURE ERRORS ARE SHOWN... MIGHT WANT TO TURN THIS OFF ON A PUBLIC SERVER
 error_reporting(E_ALL);
 ini_set('display_errors', 'On');
+/*
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+ * *
+ */
+    session_start();
 
 //CREATE OBJECTS OF THE VIEWS
 $v = new LoginView();

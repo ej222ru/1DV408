@@ -8,15 +8,22 @@ class UserController {
     private $user;
     
     public function __construct($lv, $v, $dtv) {
+
         $this->user = new model\User();
         $this->layV   = $lv;
         $this->logV   = $v;
         $this->dtv    = $dtv;
+        
     }
     
     public function startLogin() {
-        if ($this->logV->getRequestLogin()){
+        $logInStatus = $this->logV->getSessionUserLoggedIn();
+        
+   //      echo "Ett*" . $logInStatus . "*";
+        if (!$logInStatus && $this->logV->getRequestLogin()){
 
+           $this->logV->setSessionClientId();
+            
             if ($this->logV->getRequestUserName() == ''){
                 $this->logV->assignMessage(1);
             }
@@ -27,19 +34,27 @@ class UserController {
                 $this->logV->assignMessage(3);
             }
             else {
+                $this->logV->setSessionUserLoggedIn("true");
                 $this->logV->assignMessage(4);
             }
         }
         else {
             $this->logV->assignMessage(0);
         }
-
-        $this->layV->render($this->user->isLoggedIn(), $this->logV, $this->dtv);
+        if ($this->logV->getRequestLogout()){
+            if ($logInStatus){
+                $this->logV->setSessionUserLoggedIn("false");
+            }
+        }
+        
+        
+        $logInStatus = $this->logV->getSessionUserLoggedIn();
+ //       echo "Två*" . $logInStatus . "*";
+        $this->layV->render($this->logV->getSessionUserLoggedIn(), $this->logV, $this->dtv);
     }
     
     
-    
-    public function validateLogin($loginName, $loginPw) {
+     public function validateLogin($loginName, $loginPw) {
         return $this->user->validateUser($loginName, $loginPw);
     }
     

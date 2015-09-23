@@ -9,6 +9,8 @@ class LoginView {
 	private static $cookiePassword = 'LoginView::CookiePassword';
 	private static $keep = 'LoginView::KeepMeLoggedIn';
 	private static $messageId = 'LoginView::Message';
+	private static $userLoggedIn = 'LoginView::UserLoggedIn';
+
         private $message = '';
         
 	public function __construct() {
@@ -25,10 +27,10 @@ class LoginView {
 	public function response($isLoggedIn) {
 
                 if ($isLoggedIn){
-                    $response = $this->generateLoginFormHTML($this->message);
+                    $response = $this->generateLogoutButtonHTML($this->message);
                 }
                 else {
-                    $response = $this->generateLogoutButtonHTML($this->message);
+                    $response = $this->generateLoginFormHTML($this->message);
                 }
 		return $response;
 	}
@@ -75,10 +77,52 @@ class LoginView {
 	}
 	
         
+	public function setSessionClientId() {
+            $ip = filter_input(INPUT_SERVER,'HTTP_CLIENT_IP');
+            $browser = "";
+            if (isset($_REQUEST['self::$Browser'])){
+                $browser = $_REQUEST['self::$Browser'];
+            }
             
+            $_SESSION["clientIP"] =  $ip;
+            $_SESSION["clientBrowser"] =  $browser;
+ 
+        }
+
+	public function getSessionUser() {
+            return isset($_SESSION["userSessionId"]);
+       }
+        
+	public function setSessionUser() {
+            $_SESSION["userSessionId"] =  session_id();
+       }
+	public function setSessionUserLoggedIn($value) {
+      //      echo "setSessionUserLoggedIn";
+            $_SESSION[self::$userLoggedIn] =  $value;
+       }
+	public function getSessionUserLoggedIn() {
+            if (isset($_SESSION[self::$userLoggedIn])){
+                if ($_SESSION[self::$userLoggedIn] == "true"){
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            }
+            else{
+                return false;
+                
+            }
+       }
+        
+       
+        
 	//CREATE GET-FUNCTIONS TO FETCH REQUEST VARIABLES
 	public function getRequestLogin() {
             return filter_input(INPUT_POST, self::$login);
+ 	}
+	public function getRequestLogout() {
+            return filter_input(INPUT_POST, self::$logout);
 	}
 	public function getRequestUserName() {
             return filter_input(INPUT_POST, self::$name);
@@ -103,10 +147,9 @@ class LoginView {
                 case 4:
                     $this->message = "Welcome";
                     break;
-                
+                case 5:
+                    $this->message = "Bye bye!";
+                    break;
             }
-            
         }
-                
-	
 }
