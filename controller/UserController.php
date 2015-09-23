@@ -44,12 +44,14 @@ class UserController {
         if ($this->logV->getRequestLogout()){
             if ($logInStatus){
                 $this->logV->setSessionUserLoggedIn("false");
-            }
+               $this->logV->assignMessage(5);
+           }
+           else{
+               $this->logV->assignMessage(0);
+           }
         }
-        
-        
-        $logInStatus = $this->logV->getSessionUserLoggedIn();
- //       echo "Två*" . $logInStatus . "*";
+                
+
         $this->layV->render($this->logV->getSessionUserLoggedIn(), $this->logV, $this->dtv);
     }
     
