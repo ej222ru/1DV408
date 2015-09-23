@@ -101,14 +101,6 @@ class LoginView {
             $_SESSION[self::$userLoggedIn] =  $value;
             if ($value == "false"){
                 session_destroy();
-/*		setcookie(self::$cookieName, '', time() - 4600);
-		setcookie(self::$cookiePassword, '', time() - 4600);
-		// And then unset it.
-		unset($_COOKIE[self::$cookieName]);
-		unset($_COOKIE[self::$cookiePassword]);  
- * 
- */              
-                // $_SESSION=array();
             }
        }
 	public function getSessionUserLoggedIn() {

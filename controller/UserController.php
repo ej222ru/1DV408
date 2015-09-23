@@ -19,39 +19,38 @@ class UserController {
     public function startLogin() {
         $logInStatus = $this->logV->getSessionUserLoggedIn();
         
-   //      echo "Ett*" . $logInStatus . "*";
-        if (!$logInStatus && $this->logV->getRequestLogin()){
+        if (!$logInStatus){
+            if ($this->logV->getRequestLogin()){
 
-           $this->logV->setSessionClientId();
-            
-            if ($this->logV->getRequestUserName() == ''){
-                $this->logV->assignMessage(1);
-            }
-            else if ($this->logV->getRequestPassword() == ''){
-                $this->logV->assignMessage(2);
-            }
-            else if (!$this->validateLogin($this->logV->getRequestUserName(), $this->logV->getRequestPassword())){
-                $this->logV->assignMessage(3);
+                $this->logV->setSessionClientId();
+
+                 if ($this->logV->getRequestUserName() == ''){
+                     $this->logV->assignMessage(1);
+                 }
+                 else if ($this->logV->getRequestPassword() == ''){
+                     $this->logV->assignMessage(2);
+                 }
+                 else if (!$this->validateLogin($this->logV->getRequestUserName(), $this->logV->getRequestPassword())){
+                     $this->logV->assignMessage(3);
+                }
+                else {
+                    $this->logV->setSessionUserLoggedIn("true");
+                    $this->logV->assignMessage(4);
+                }
             }
             else {
-                $this->logV->setSessionUserLoggedIn("true");
-                $this->logV->assignMessage(4);
-            }
+                 $this->logV->assignMessage(0);
+            }            
         }
         else {
-            $this->logV->assignMessage(0);
-        }
-        if ($this->logV->getRequestLogout()){
-            if ($logInStatus){
+            if ($this->logV->getRequestLogout()){
                 $this->logV->setSessionUserLoggedIn("false");
-               $this->logV->assignMessage(5);
-           }
-           else{
-               $this->logV->assignMessage(0);
-           }
-        }
-                
-
+                $this->logV->assignMessage(5);
+            }
+            else {
+                $this->logV->assignMessage(0);
+            }                 
+        }                
         $this->layV->render($this->logV->getSessionUserLoggedIn(), $this->logV, $this->dtv);
     }
     
